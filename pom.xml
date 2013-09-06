@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>by.rovar</groupId>
+    <artifactId>stork</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>swc</packaging>
+
+    <name>stork</name>
+
+    <build>
+        <sourceDirectory>src/main/flex</sourceDirectory>
+        <testSourceDirectory>src/test/flex</testSourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.flexmojos</groupId>
+                <artifactId>flexmojos-maven-plugin</artifactId>
+                <version>4.2-beta</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <debug>true</debug>
+                    <skipTests/>
+                    <storepass/>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.adobe.flex.framework</groupId>
+            <artifactId>flex-framework</artifactId>
+            <version>4.5.1.21328</version>
+            <type>pom</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.adobe.flexunit</groupId>
+            <artifactId>flexunit</artifactId>
+            <version>0.85</version>
+            <type>swc</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gamua</groupId>
+            <artifactId>starling-framework</artifactId>
+            <version>1.4</version>
+            <type>swc</type>
+        </dependency>
+        <dependency>
+            <groupId>org.osflash</groupId>
+            <artifactId>as3-signals</artifactId>
+            <version>0.9-beta</version>
+            <type>swc</type>
+        </dependency>
+    </dependencies>
+    <repositories>
+
+        <repository>
+            <id>creative-mobile-social</id>
+            <url>http://nexus.social.cm.local/content/groups/public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>flex-mojos-repository</id>
+            <url>http://repository.sonatype.org/content/groups/flexgroup/</url>
+        </repository>
+        <repository>
+            <id>sonatype-repository</id>
+            <url>https://oss.sonatype.org/content/groups/public</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>rso</id>
+            <url>http://repository.sonatype.org/content/groups/flexgroup/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>ossrh</id>
+            <name>Sonatype OSS Repository</name>
+            <url>http://oss.sonatype.org/content/groups/public</url>
+            <layout>default</layout>
+        </pluginRepository>
+        <pluginRepository>
+            <id>flex-mojos-plugin-repository</id>
+            <url>http://repository.sonatype.org/content/groups/flexgroup</url>
+        </pluginRepository>
+    </pluginRepositories>
+</project>
