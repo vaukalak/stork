@@ -1,1 +1,5 @@
-../../view-tuning-tool/.gitignore
+.idea/
+target/
+*.iml
+.DS_Store
+src/main/flex/ignored
