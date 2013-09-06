@@ -19,9 +19,14 @@ public class StorkTween implements IStorkTween{
     public const progress:ISignal = new Signal();
 
     private var _tween:Tween;
+    private var _properties:Object;
 
     public function StorkTween(target:Object, time:Number, properties:Object, transition:String = "") {
+        _properties = properties;
         _tween = new Tween(target, time, transition || Transitions.LINEAR);
+        for (var propertyName:String in _properties) {
+            _tween.animate(propertyName, _properties[propertyName]);
+        }
         _tween.onComplete = complete.dispatch;
         _tween.onUpdate = progress.dispatch;
     }
