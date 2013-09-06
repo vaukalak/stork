@@ -9,12 +9,49 @@ package by.rovar.stork {
 import org.osflash.signals.ISignal;
 import org.osflash.signals.Signal;
 
-public class StorkTween {
+import starling.animation.Transitions;
+import starling.animation.Tween;
+import starling.core.Starling;
+
+public class StorkTween implements IStorkTween{
 
     public const complete:ISignal = new Signal();
     public const progress:ISignal = new Signal();
 
-    public function StorkTween(_target:Object, time:Number) {
+    private var _tween:Tween;
+
+    public function StorkTween(target:Object, time:Number, properties:Object, transition:String = "") {
+        _tween = new Tween(target, time, transition || Transitions.LINEAR);
+        _tween.onComplete = complete.dispatch;
+        _tween.onUpdate = progress.dispatch;
+    }
+
+    public function set delay(delay:Number):void {
+        _tween.delay = delay;
+    }
+
+    public function get delay():Number {
+        return _tween.delay;
+    }
+
+    public function set easing(value:String):void {
+        _tween.transition = value;
+    }
+
+    public function get easing():String {
+        return _tween.transition;
+    }
+
+    public function get duration():Number {
+        return _tween.totalTime;
+    }
+
+    public function start():void {
+        Starling.current.juggler.add(_tween);
+    }
+
+    public function update(dt:Number):void {
+        _tween.advanceTime(dt);
     }
 }
 }
