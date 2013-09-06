@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package by.rovar.stork {
-public class StorkTweenPackBuilder {
+public class StorkTweenPackBuilder implements IStorkTweenBuilder{
 
     private var _storkTweenPack:StorkTweenPack;
 

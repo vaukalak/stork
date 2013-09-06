@@ -19,6 +19,7 @@ public class StorkTweenPack implements IStorkTween {
 
     public function StorkTweenPack() {
         _totalTime = 0;
+        _duration = 0;
         _advanceTimeDispatcher = new AdvanceTimeDispatcher(update);
     }
 
@@ -26,18 +27,19 @@ public class StorkTweenPack implements IStorkTween {
         var newTotalTime:Number = _totalTime + dt;
         for (var tween:* in _delayByTween) {
             var tweenStartTime:* = _delayByTween[tween];
-            if (tweenStartTime > _totalTime && tweenStartTime < newTotalTime) {
+            if (tweenStartTime >= _totalTime && tweenStartTime < newTotalTime) {
                 (tween as IStorkTween).start();
                 (tween as IStorkTween).update(tweenStartTime - _totalTime);
             }
         }
+        _totalTime = newTotalTime;
     }
 
     public function insert(value:IStorkTween, delay:Number):void {
         if (delay < 0) {
             delay = 0;
         }
-        _duration = Math.min(delay + value.duration, _duration);
+        _duration = Math.max(delay + value.duration, _duration);
         _delayByTween[value] = delay;
     }
 

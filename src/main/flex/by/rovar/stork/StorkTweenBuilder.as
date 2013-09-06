@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package by.rovar.stork {
-public class StorkTweenBuilder implements IStorkTweenBuilder{
+public class StorkTweenBuilder implements IStorkTweenBuilder {
 
     private var _tween:StorkTween;
 
@@ -31,6 +31,13 @@ public class StorkTweenBuilder implements IStorkTweenBuilder{
         return to(target, time, targetProperties);
     }
 
+    public static function fromTo(target:Object, time:Number, fromProperties:Object, toProperties:Object):StorkTweenBuilder {
+        for (var propertyName:String in fromProperties) {
+            target[propertyName] = fromProperties[propertyName];
+        }
+        return to(target, time, toProperties);
+    }
+
     //---------------------------------
     //
     //  PUBLIC METHODS
@@ -53,6 +60,5 @@ public class StorkTweenBuilder implements IStorkTweenBuilder{
         }
         return _tween;
     }
-
 }
 }
