@@ -27,9 +27,10 @@ public class StorkTween implements IStorkTween{
         for (var propertyName:String in _properties) {
             _tween.animate(propertyName, _properties[propertyName]);
         }
-        _tween.onComplete = complete.dispatch;
+        _tween.onComplete = onComplete;
         _tween.onUpdate = progress.dispatch;
     }
+
 
     public function set delay(delay:Number):void {
         _tween.delay = delay;
@@ -57,6 +58,26 @@ public class StorkTween implements IStorkTween{
 
     public function update(dt:Number):void {
         _tween.advanceTime(dt);
+    }
+
+    public function set onCompleteParams(value:Array):void {
+        _tween.onCompleteArgs = value;
+    }
+
+    public function get onCompleteParams():Array {
+        return _tween.onCompleteArgs;
+    }
+
+    //---------------------------------
+    //
+    //  PRIVATE METHODS
+    //
+    //---------------------------------
+
+
+    private function onComplete(...rest):void {
+        Starling.current.juggler.remove(_tween);
+        complete.dispatch.apply(null, rest);
     }
 }
 }
