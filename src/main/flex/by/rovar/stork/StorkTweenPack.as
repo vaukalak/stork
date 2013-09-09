@@ -8,14 +8,21 @@
 package by.rovar.stork {
 import flash.utils.Dictionary;
 
+import org.osflash.signals.ISignal;
+import org.osflash.signals.Signal;
+
 import starling.core.Starling;
 
 public class StorkTweenPack implements IStorkTween {
+
+    private const _complete:ISignal = new Signal();
+    private const _progress:ISignal = new Signal();
 
     private var _duration:Number;
     private var _advanceTimeDispatcher:AdvanceTimeDispatcher;
     private const _delayByTween:Dictionary = new Dictionary();
     private var _totalTime:Number;
+    private var _onCompleteParams:Array;
 
     public function StorkTweenPack() {
         _totalTime = 0;
@@ -33,6 +40,10 @@ public class StorkTweenPack implements IStorkTween {
             }
         }
         _totalTime = newTotalTime;
+        if(_totalTime > _duration) {
+            Starling.current.juggler.remove(_advanceTimeDispatcher);
+            _complete.dispatch.apply(null, _onCompleteParams || []);
+        }
     }
 
     public function insert(value:IStorkTween, delay:Number):void {
@@ -49,6 +60,22 @@ public class StorkTweenPack implements IStorkTween {
 
     public function get duration():Number {
         return _duration;
+    }
+
+    public function get complete():ISignal {
+        return _complete;
+    }
+
+    public function get progress():ISignal {
+        return _progress;
+    }
+
+    public function get onCompleteParams():Array {
+        return _onCompleteParams;
+    }
+
+    public function set onCompleteParams(value:Array):void {
+        _onCompleteParams = value;
     }
 }
 }

@@ -44,6 +44,16 @@ public class StorkTweenBuilder implements IStorkTweenBuilder {
     //
     //---------------------------------
 
+    public function onComplete(value:Function):IStorkTweenBuilder {
+        _tween.complete.add(value);
+        return this;
+    }
+
+    public function onCompleteParams(...rest):IStorkTweenBuilder {
+        _tween.onCompleteParams = rest;
+        return this;
+    }
+
     public function delay(value:Number):StorkTweenBuilder {
         _tween.delay = value;
         return this;

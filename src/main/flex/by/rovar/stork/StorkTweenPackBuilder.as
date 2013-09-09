@@ -30,5 +30,15 @@ public class StorkTweenPackBuilder implements IStorkTweenBuilder{
         }
         return _storkTweenPack;
     }
+
+    public function onComplete(value:Function):IStorkTweenBuilder {
+        _storkTweenPack.complete.add(value);
+        return this;
+    }
+
+    public function onCompleteParams(...rest):IStorkTweenBuilder {
+        _storkTweenPack.onCompleteParams = rest;
+        return this;
+    }
 }
 }

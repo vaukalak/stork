@@ -8,5 +8,7 @@
 package by.rovar.stork {
 public interface IStorkTweenBuilder {
     function resolve(autostart:Boolean = true):IStorkTween;
+    function onComplete(value:Function):IStorkTweenBuilder;
+    function onCompleteParams(...rest):IStorkTweenBuilder;
 }
 }

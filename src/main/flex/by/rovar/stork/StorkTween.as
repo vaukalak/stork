@@ -15,8 +15,8 @@ import starling.core.Starling;
 
 public class StorkTween implements IStorkTween{
 
-    public const complete:ISignal = new Signal();
-    public const progress:ISignal = new Signal();
+    private const _complete:ISignal = new Signal();
+    private const _progress:ISignal = new Signal();
 
     private var _tween:Tween;
     private var _properties:Object;
@@ -28,9 +28,16 @@ public class StorkTween implements IStorkTween{
             _tween.animate(propertyName, _properties[propertyName]);
         }
         _tween.onComplete = onComplete;
-        _tween.onUpdate = progress.dispatch;
+        _tween.onUpdate = _progress.dispatch;
     }
 
+    public function get complete():ISignal {
+        return _complete;
+    }
+
+    public function get progress():ISignal {
+        return _progress;
+    }
 
     public function set delay(delay:Number):void {
         _tween.delay = delay;
@@ -77,7 +84,7 @@ public class StorkTween implements IStorkTween{
 
     private function onComplete(...rest):void {
         Starling.current.juggler.remove(_tween);
-        complete.dispatch.apply(null, rest);
+        _complete.dispatch.apply(null, rest);
     }
 }
 }
