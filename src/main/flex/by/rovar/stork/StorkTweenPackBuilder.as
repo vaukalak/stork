@@ -31,14 +31,10 @@ public class StorkTweenPackBuilder implements IStorkTweenBuilder{
         return _storkTweenPack;
     }
 
-    public function onComplete(value:Function):IStorkTweenBuilder {
-        _storkTweenPack.complete.add(value);
+    public function onComplete(value:Function, params:Array = null):IStorkTweenBuilder {
+        _storkTweenPack.complete.add(params ? new ParametrisedListener(value, params).invoke : value);
         return this;
     }
+}
+}
 
-    public function onCompleteParams(...rest):IStorkTweenBuilder {
-        _storkTweenPack.onCompleteParams = rest;
-        return this;
-    }
-}
-}

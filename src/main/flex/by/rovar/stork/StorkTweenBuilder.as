@@ -44,13 +44,8 @@ public class StorkTweenBuilder implements IStorkTweenBuilder {
     //
     //---------------------------------
 
-    public function onComplete(value:Function):IStorkTweenBuilder {
-        _tween.complete.add(value);
-        return this;
-    }
-
-    public function onCompleteParams(...rest):IStorkTweenBuilder {
-        _tween.onCompleteParams = rest;
+    public function onComplete(value:Function, params:Array = null):IStorkTweenBuilder {
+        _tween.complete.add(params ? new ParametrisedListener(value, params).invoke : value);
         return this;
     }
 

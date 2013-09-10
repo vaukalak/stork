@@ -18,9 +18,5 @@ public interface IStorkTween {
     function get complete():ISignal;
 
     function get progress():ISignal;
-
-    function get onCompleteParams():Array;
-
-    function set onCompleteParams(value:Array):void;
 }
 }

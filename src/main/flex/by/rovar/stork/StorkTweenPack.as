@@ -22,7 +22,6 @@ public class StorkTweenPack implements IStorkTween {
     private var _advanceTimeDispatcher:AdvanceTimeDispatcher;
     private const _delayByTween:Dictionary = new Dictionary();
     private var _totalTime:Number;
-    private var _onCompleteParams:Array;
 
     public function StorkTweenPack() {
         _totalTime = 0;
@@ -42,7 +41,7 @@ public class StorkTweenPack implements IStorkTween {
         _totalTime = newTotalTime;
         if(_totalTime > _duration) {
             Starling.current.juggler.remove(_advanceTimeDispatcher);
-            _complete.dispatch.apply(null, _onCompleteParams || []);
+            _complete.dispatch();
         }
     }
 
@@ -68,14 +67,6 @@ public class StorkTweenPack implements IStorkTween {
 
     public function get progress():ISignal {
         return _progress;
-    }
-
-    public function get onCompleteParams():Array {
-        return _onCompleteParams;
-    }
-
-    public function set onCompleteParams(value:Array):void {
-        _onCompleteParams = value;
     }
 }
 }
