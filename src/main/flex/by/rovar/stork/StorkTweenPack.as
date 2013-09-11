@@ -8,40 +8,35 @@
 package by.rovar.stork {
 import flash.utils.Dictionary;
 
-import org.osflash.signals.ISignal;
-import org.osflash.signals.Signal;
-
-import starling.core.Starling;
-
-public class StorkTweenPack implements IStorkTween {
-
-    private const _complete:ISignal = new Signal();
-    private const _progress:ISignal = new Signal();
+public class StorkTweenPack extends AbstractStorkTween {
 
     private var _duration:Number;
-    private var _advanceTimeDispatcher:AdvanceTimeDispatcher;
+
     private const _delayByTween:Dictionary = new Dictionary();
     private var _totalTime:Number;
+    private var _activeTweens:Vector.<IStorkTween> = new <IStorkTween>[];
 
     public function StorkTweenPack() {
         _totalTime = 0;
         _duration = 0;
-        _advanceTimeDispatcher = new AdvanceTimeDispatcher(update);
     }
 
-    public function update(dt:Number):void {
+    override public function update(dt:Number):void {
         var newTotalTime:Number = _totalTime + dt;
+        for each (var storkTween:IStorkTween in _activeTweens) {
+            storkTween.update(dt);
+        }
         for (var tween:* in _delayByTween) {
             var tweenStartTime:* = _delayByTween[tween];
             if (tweenStartTime >= _totalTime && tweenStartTime < newTotalTime) {
-                (tween as IStorkTween).start();
                 (tween as IStorkTween).update(tweenStartTime - _totalTime);
+                _activeTweens.push(tween);
             }
         }
         _totalTime = newTotalTime;
-        if(_totalTime > _duration) {
-            Starling.current.juggler.remove(_advanceTimeDispatcher);
-            _complete.dispatch();
+        if (_totalTime > _duration) {
+            dispose();
+            complete.dispatch();
         }
     }
 
@@ -53,36 +48,8 @@ public class StorkTweenPack implements IStorkTween {
         _delayByTween[value] = delay;
     }
 
-    public function start():void {
-        Starling.current.juggler.add(_advanceTimeDispatcher);
-    }
-
-    public function get duration():Number {
+    override public function get duration():Number {
         return _duration;
     }
-
-    public function get complete():ISignal {
-        return _complete;
-    }
-
-    public function get progress():ISignal {
-        return _progress;
-    }
 }
-}
-
-import starling.animation.IAnimatable;
-
-class AdvanceTimeDispatcher implements IAnimatable {
-
-    private var _callback:Function;
-
-
-    public function AdvanceTimeDispatcher(callback:Function) {
-        _callback = callback;
-    }
-
-    public function advanceTime(time:Number):void {
-        _callback(time);
-    }
 }
