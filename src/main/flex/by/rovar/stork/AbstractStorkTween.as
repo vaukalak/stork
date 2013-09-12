@@ -24,7 +24,9 @@ public class AbstractStorkTween implements IStorkTween {
     }
 
     protected function dispose():void {
-        Starling.current.juggler.remove(_advanceTimeDispatcher);
+        if (_advanceTimeDispatcher) {
+            Starling.current.juggler.remove(_advanceTimeDispatcher);
+        }
     }
 
     public function get duration():Number {
@@ -40,6 +42,10 @@ public class AbstractStorkTween implements IStorkTween {
 
     public function get progress():ISignal {
         return _progress;
+    }
+
+    public function get currentTime():Number {
+        return 0;
     }
 }
 }

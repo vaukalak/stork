@@ -13,6 +13,8 @@ public interface IStorkTween {
 
     function get duration():Number;
 
+    function get currentTime():Number;
+
     function update(dt:Number):void;
 
     function get complete():ISignal;

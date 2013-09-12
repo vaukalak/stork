@@ -43,9 +43,14 @@ public class StorkTween extends AbstractStorkTween {
         return _tween.totalTime;
     }
 
+
+    override public function get currentTime():Number {
+        return _tween.currentTime;
+    }
+
     override public function update(dt:Number):void {
         _tween.advanceTime(dt);
-        if (_tween.currentTime >= _tween.currentTime) {
+        if (_tween.currentTime >= _tween.totalTime) {
             dispose();
             complete.dispatch();
         }

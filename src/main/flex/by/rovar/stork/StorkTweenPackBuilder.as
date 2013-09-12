@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package by.rovar.stork {
-public class StorkTweenPackBuilder implements IStorkTweenBuilder{
+public class StorkTweenPackBuilder implements IStorkTweenBuilder {
 
     private var _storkTweenPack:StorkTweenPack;
 
@@ -15,6 +15,7 @@ public class StorkTweenPackBuilder implements IStorkTweenBuilder{
     }
 
     public function append(tween:IStorkTweenBuilder, delay:Number = 0):StorkTweenPackBuilder {
+        //TODO: refator delays
         _storkTweenPack.insert(tween.resolve(false), _storkTweenPack.duration + delay);
         return this;
     }
@@ -24,8 +25,13 @@ public class StorkTweenPackBuilder implements IStorkTweenBuilder{
         return this;
     }
 
+    public function timeScale(value:Number):StorkTweenPackBuilder {
+        _storkTweenPack.timeScale = value;
+        return this;
+    }
+
     public function resolve(autostart:Boolean = true):IStorkTween {
-        if(autostart){
+        if (autostart) {
             _storkTweenPack.start();
         }
         return _storkTweenPack;
