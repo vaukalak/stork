@@ -43,15 +43,15 @@
         <dependency>
             <groupId>org.osflash</groupId>
             <artifactId>as3-signals</artifactId>
-            <version>0.9-beta</version>
+            <version>0.9</version>
             <type>swc</type>
         </dependency>
     </dependencies>
     <repositories>
 
         <repository>
-            <id>creative-mobile-social</id>
-            <url>http://nexus.social.cm.local/content/groups/public/</url>
+            <id>rovar-repository-releases</id>
+            <url>https://repository-vaukalak.forge.cloudbees.com/release/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
