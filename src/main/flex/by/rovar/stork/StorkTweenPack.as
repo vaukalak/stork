@@ -35,13 +35,21 @@ public class StorkTweenPack extends AbstractStorkTween {
             if (tweenStartTime >= _totalTime && tweenStartTime < newTotalTime) {
                 _activeTweens.push(tween);
                 tween.complete.add(new ParametrisedListener(onTweenComplete, [tween]).invoke);
-                (tween as IStorkTween).update(tweenStartTime - _totalTime);
+                (tween as IStorkTween).update(newTotalTime - tweenStartTime);
             }
         }
         _totalTime = newTotalTime;
         if (_totalTime >= _duration) {
             dispose();
             complete.dispatch();
+        }
+    }
+
+
+    override protected function dispose():void {
+        super.dispose();
+        for (var tween:* in _delayByTween) {
+            delete _delayByTween[tween];
         }
     }
 
