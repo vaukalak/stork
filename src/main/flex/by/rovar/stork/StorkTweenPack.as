@@ -13,6 +13,7 @@ public class StorkTweenPack extends AbstractStorkTween {
     public var timeScale:Number;
     private var _duration:Number;
 
+    private const _allTweens:Vector.<IStorkTween> = new Vector.<IStorkTween>();
     private const _delayByTween:Dictionary = new Dictionary();
     private var _currentTime:Number;
     private var _activeTweens:Vector.<IStorkTween> = new <IStorkTween>[];
@@ -60,13 +61,6 @@ public class StorkTweenPack extends AbstractStorkTween {
         return _currentTime;
     }
 
-    override protected function dispose():void {
-        super.dispose();
-//        for (var tween:* in _delayByTween) {
-//            delete _delayByTween[tween];
-//        }
-    }
-
     private function onTweenComplete(tween:IStorkTween):void {
         if (tween is StorkTweenPack) {
             trace("tween completed:" + tween.currentTime);
@@ -82,10 +76,18 @@ public class StorkTweenPack extends AbstractStorkTween {
         }
         _duration = Math.max(delay + value.duration, _duration);
         _delayByTween[value] = delay;
+        _allTweens.push(value);
     }
 
     override public function get duration():Number {
         return _duration;
+    }
+
+
+    override public function changeProperty(propertyName:String, changeFunction:Function):void {
+        for each (var storkTween:IStorkTween in _allTweens) {
+            storkTween.changeProperty(propertyName, changeFunction);
+        }
     }
 }
 }

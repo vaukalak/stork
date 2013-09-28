@@ -28,7 +28,7 @@ public class AbstractStorkTween implements IStorkTween {
         Starling.current.juggler.add(_advanceTimeDispatcher);
     }
 
-    protected function dispose():void {
+    public function dispose():void {
         if (_advanceTimeDispatcher) {
             Starling.current.juggler.remove(_advanceTimeDispatcher);
         }
@@ -63,6 +63,26 @@ public class AbstractStorkTween implements IStorkTween {
         if (deltaTime != 0) {
             update(deltaTime);
         }
+    }
+
+    public function pause():void {
+        if (_advanceTimeDispatcher) {
+            Starling.current.juggler.remove(_advanceTimeDispatcher);
+        }
+    }
+
+    public function resume():void {
+        if (_advanceTimeDispatcher) {
+            Starling.current.juggler.add(_advanceTimeDispatcher);
+        }
+    }
+
+    public function stop():void {
+        pause();
+        currentProgress = 0;
+    }
+
+    public function changeProperty(propertyName:String, changeFunction:Function):void {
     }
 }
 }

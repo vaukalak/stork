@@ -28,7 +28,9 @@ public class StorkTween extends AbstractStorkTween {
     override public function reset():void {
         _tween.reset(_tween.target, _tween.totalTime, _tween.transition);
         for (var propertyName:String in _properties) {
-            _tween.target[propertyName] = _propertiesOnStart[propertyName];
+            if (_propertiesOnStart[propertyName]) {
+                _tween.target[propertyName] = _propertiesOnStart[propertyName];
+            }
             _tween.animate(propertyName, _properties[propertyName]);
         }
     }
@@ -84,6 +86,23 @@ public class StorkTween extends AbstractStorkTween {
         if (_tween.currentTime <= 0 || _tween.currentTime >= _tween.totalTime) {
             dispose();
             complete.dispatch();
+        }
+    }
+
+    override public function changeProperty(propertyName:String, changeFunction:Function):void {
+        var oldTime:Number = _tween.currentTime;
+        doChangeProperties(propertyName, changeFunction);
+        reset();
+        _tween.advanceTime(oldTime);
+    }
+
+    private function doChangeProperties(propertyName:String, changeFunction:Function):void {
+        if (_propertiesOnStart[propertyName]) {
+            _propertiesOnStart[propertyName] = changeFunction(_propertiesOnStart[propertyName]);
+        }
+        if (_properties[propertyName]) {
+            _properties[propertyName] = changeFunction(_properties[propertyName]);
+            _tween.target[propertyName] = changeFunction(_tween.target[propertyName]);
         }
     }
 }

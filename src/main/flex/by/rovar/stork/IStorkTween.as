@@ -24,5 +24,15 @@ public interface IStorkTween {
     function get currentProgress():Number;
 
     function set currentProgress(value:Number):void;
+
+    function pause():void;
+
+    function resume():void;
+
+    function stop():void;
+
+    function dispose():void;
+
+    function changeProperty(propertyName:String, changeFunction:Function):void;
 }
 }
