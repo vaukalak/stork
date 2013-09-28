@@ -14,46 +14,64 @@ public class StorkTweenPack extends AbstractStorkTween {
     private var _duration:Number;
 
     private const _delayByTween:Dictionary = new Dictionary();
-    private var _totalTime:Number;
+    private var _currentTime:Number;
     private var _activeTweens:Vector.<IStorkTween> = new <IStorkTween>[];
 
     public function StorkTweenPack() {
         timeScale = 1;
-        _totalTime = 0;
+        _currentTime = 0;
         _duration = 0;
     }
 
     override public function update(dt:Number):void {
         var scaledDt:Number = dt * timeScale;
-        var newTotalTime:Number = _totalTime + scaledDt;
+        var newTotalTime:Number = Math.max(Math.min(_currentTime + scaledDt, _duration), 0);
         var activeTweensClone:Vector.<IStorkTween> = _activeTweens.concat();
+
         for each (var storkTween:IStorkTween in  activeTweensClone) {
             storkTween.update(scaledDt);
         }
         for (var tween:* in _delayByTween) {
-            var tweenStartTime:* = _delayByTween[tween];
-            if (tweenStartTime >= _totalTime && tweenStartTime < newTotalTime) {
-                _activeTweens.push(tween);
-                tween.complete.add(new ParametrisedListener(onTweenComplete, [tween]).invoke);
-                (tween as IStorkTween).update(newTotalTime - tweenStartTime);
+            var tweenStartTime:Number = _delayByTween[tween];
+            if (dt >= 0) {
+                if (tweenStartTime >= _currentTime && tweenStartTime < newTotalTime) {
+                    _activeTweens.push(tween);
+                    tween.complete.addOnce(new ParametrisedListener(onTweenComplete, [tween]).invoke);
+                    (tween as IStorkTween).update(newTotalTime - tweenStartTime);
+                }
+            } else {
+                var tweenEndTime:Number = tweenStartTime + tween.duration;
+                if (tweenEndTime <= _currentTime && tweenEndTime > newTotalTime) {
+                    _activeTweens.push(tween);
+                    tween.complete.addOnce(new ParametrisedListener(onTweenComplete, [tween]).invoke);
+                    (tween as IStorkTween).update(newTotalTime - tweenEndTime);
+                }
             }
         }
-        _totalTime = newTotalTime;
-        if (_totalTime >= _duration) {
+        progress.dispatch();
+        _currentTime = newTotalTime;
+        if (_currentTime >= _duration || _currentTime <= 0) {
             dispose();
             complete.dispatch();
         }
     }
 
+    override public function get currentTime():Number {
+        return _currentTime;
+    }
 
     override protected function dispose():void {
         super.dispose();
-        for (var tween:* in _delayByTween) {
-            delete _delayByTween[tween];
-        }
+//        for (var tween:* in _delayByTween) {
+//            delete _delayByTween[tween];
+//        }
     }
 
     private function onTweenComplete(tween:IStorkTween):void {
+        if (tween is StorkTweenPack) {
+            trace("tween completed:" + tween.currentTime);
+            trace("index:" + _activeTweens.indexOf(tween));
+        }
         var indexOf:Number = _activeTweens.indexOf(tween);
         _activeTweens.splice(indexOf, 1);
     }

@@ -13,6 +13,8 @@ public class StorkTween extends AbstractStorkTween {
 
     private var _tween:Tween;
     private var _properties:Object;
+    private const _propertiesOnStart:Object = {};
+    private var _tweenStarted:Boolean;
 
     public function StorkTween(target:Object, time:Number, properties:Object, transition:String = "") {
         _properties = properties;
@@ -21,6 +23,14 @@ public class StorkTween extends AbstractStorkTween {
             _tween.animate(propertyName, _properties[propertyName]);
         }
         _tween.onUpdate = progress.dispatch;
+    }
+
+    override public function reset():void {
+        _tween.reset(_tween.target, _tween.totalTime, _tween.transition);
+        for (var propertyName:String in _properties) {
+            _tween.target[propertyName] = _propertiesOnStart[propertyName];
+            _tween.animate(propertyName, _properties[propertyName]);
+        }
     }
 
     public function set delay(delay:Number):void {
@@ -43,14 +53,35 @@ public class StorkTween extends AbstractStorkTween {
         return _tween.totalTime;
     }
 
-
     override public function get currentTime():Number {
         return _tween.currentTime;
     }
 
     override public function update(dt:Number):void {
-        _tween.advanceTime(dt);
-        if (_tween.currentTime >= _tween.totalTime) {
+        if (!_tweenStarted) {
+            for (var propertyName:String in _properties) {
+                _propertiesOnStart[propertyName] = _tween.target[propertyName];
+            }
+            _tweenStarted = true;
+        }
+        if (_tween.totalTime == _tween.currentTime && dt < 0) {
+            reset();
+            _tween.advanceTime(_tween.totalTime + dt);
+        } else {
+            if (dt > 0) {
+                _tween.advanceTime(dt);
+            } else {
+                if (-dt > _tween.currentTime) {
+                    _tween.advanceTime(-_tween.currentTime);
+                    for (var propertyName:String in _propertiesOnStart) {
+                        _tween.target[propertyName] = _propertiesOnStart[propertyName];
+                    }
+                } else {
+                    _tween.advanceTime(dt);
+                }
+            }
+        }
+        if (_tween.currentTime <= 0 || _tween.currentTime >= _tween.totalTime) {
             dispose();
             complete.dispatch();
         }

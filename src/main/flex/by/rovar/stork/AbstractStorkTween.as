@@ -15,8 +15,13 @@ public class AbstractStorkTween implements IStorkTween {
 
     private const _complete:ISignal = new Signal();
     private const _progress:ISignal = new Signal();
+    private var _currentProgress:Number;
 
     private var _advanceTimeDispatcher:AdvanceTimeDispatcher;
+
+    public function reset():void {
+
+    }
 
     public function start():void {
         _advanceTimeDispatcher = new AdvanceTimeDispatcher(update);
@@ -34,6 +39,7 @@ public class AbstractStorkTween implements IStorkTween {
     }
 
     public function update(dt:Number):void {
+        progress.dispatch();
     }
 
     public function get complete():ISignal {
@@ -47,11 +53,21 @@ public class AbstractStorkTween implements IStorkTween {
     public function get currentTime():Number {
         return 0;
     }
+
+    public function get currentProgress():Number {
+        return currentTime / duration;
+    }
+
+    public function set currentProgress(value:Number):void {
+        var deltaTime:Number = (value - currentProgress) * duration;
+        if (deltaTime != 0) {
+            update(deltaTime);
+        }
+    }
 }
 }
 
 import starling.animation.IAnimatable;
-
 
 class AdvanceTimeDispatcher implements IAnimatable {
 

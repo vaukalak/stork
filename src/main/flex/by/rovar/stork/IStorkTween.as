@@ -20,5 +20,9 @@ public interface IStorkTween {
     function get complete():ISignal;
 
     function get progress():ISignal;
+
+    function get currentProgress():Number;
+
+    function set currentProgress(value:Number):void;
 }
 }
