@@ -14,6 +14,7 @@ import starling.core.Starling;
 public class AbstractStorkTween implements IStorkTween {
 
     private const _complete:ISignal = new Signal();
+    private const _started:ISignal = new Signal();
     private const _progress:ISignal = new Signal();
     private var _currentProgress:Number;
 
@@ -44,6 +45,10 @@ public class AbstractStorkTween implements IStorkTween {
 
     public function get complete():ISignal {
         return _complete;
+    }
+
+    public function get started():ISignal {
+        return _started;
     }
 
     public function get progress():ISignal {

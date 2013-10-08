@@ -65,6 +65,7 @@ public class StorkTween extends AbstractStorkTween {
                 _propertiesOnStart[propertyName] = _tween.target[propertyName];
             }
             _tweenStarted = true;
+            started.dispatch();
         }
         if (_tween.totalTime == _tween.currentTime && dt < 0) {
             reset();

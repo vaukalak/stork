@@ -17,6 +17,7 @@ public class StorkTweenPack extends AbstractStorkTween {
     private const _delayByTween:Dictionary = new Dictionary();
     private var _currentTime:Number;
     private var _activeTweens:Vector.<IStorkTween> = new <IStorkTween>[];
+    private var _tweenStarted:Boolean;
 
     public function StorkTweenPack() {
         timeScale = 1;
@@ -25,6 +26,10 @@ public class StorkTweenPack extends AbstractStorkTween {
     }
 
     override public function update(dt:Number):void {
+        if (!_tweenStarted) {
+            _tweenStarted = true;
+            started.dispatch();
+        }
         var scaledDt:Number = dt * timeScale;
         var newTotalTime:Number = Math.max(Math.min(_currentTime + scaledDt, _duration), 0);
         var activeTweensClone:Vector.<IStorkTween> = _activeTweens.concat();
@@ -35,17 +40,13 @@ public class StorkTweenPack extends AbstractStorkTween {
         for (var tween:* in _delayByTween) {
             var tweenStartTime:Number = _delayByTween[tween];
             if (dt >= 0) {
-                if (tweenStartTime >= _currentTime && tweenStartTime < newTotalTime) {
-                    _activeTweens.push(tween);
-                    tween.complete.addOnce(new ParametrisedListener(onTweenComplete, [tween]).invoke);
-                    (tween as IStorkTween).update(newTotalTime - tweenStartTime);
+                if (tweenStartTime >= _currentTime && tweenStartTime <= newTotalTime) {
+                    addActiveTween(tween, newTotalTime - tweenStartTime);
                 }
             } else {
                 var tweenEndTime:Number = tweenStartTime + tween.duration;
-                if (tweenEndTime <= _currentTime && tweenEndTime > newTotalTime) {
-                    _activeTweens.push(tween);
-                    tween.complete.addOnce(new ParametrisedListener(onTweenComplete, [tween]).invoke);
-                    (tween as IStorkTween).update(newTotalTime - tweenEndTime);
+                if (tweenEndTime <= _currentTime && tweenEndTime >= newTotalTime) {
+                    addActiveTween(tween, newTotalTime - tweenEndTime);
                 }
             }
         }
@@ -57,21 +58,26 @@ public class StorkTweenPack extends AbstractStorkTween {
         }
     }
 
+    private function addActiveTween(tween:IStorkTween, dt:Number):void {
+        if (_activeTweens.indexOf(tween) != -1) {
+            return;
+        }
+        _activeTweens.push(tween);
+        tween.complete.addOnce(new ParametrisedListener(onTweenComplete, [tween]).invoke);
+        tween.update(dt);
+    }
+
     override public function get currentTime():Number {
         return _currentTime;
     }
 
     private function onTweenComplete(tween:IStorkTween):void {
-        if (tween is StorkTweenPack) {
-            trace("tween completed:" + tween.currentTime);
-            trace("index:" + _activeTweens.indexOf(tween));
-        }
         var indexOf:Number = _activeTweens.indexOf(tween);
         _activeTweens.splice(indexOf, 1);
     }
 
     public function insert(value:IStorkTween, delay:Number):void {
-        if (delay < 0) {
+        if (delay < 0 || isNaN(delay)) {
             delay = 0;
         }
         _duration = Math.max(delay + value.duration, _duration);

@@ -34,5 +34,7 @@ public interface IStorkTween {
     function dispose():void;
 
     function changeProperty(propertyName:String, changeFunction:Function):void;
+
+    function get started():ISignal;
 }
 }

@@ -41,6 +41,11 @@ public class StorkTweenPackBuilder implements IStorkTweenBuilder {
         _storkTweenPack.complete.add(params ? new ParametrisedListener(value, params).invoke : value);
         return this;
     }
+
+    public function onStart(value:Function, params:Array = null):IStorkTweenBuilder {
+        _storkTweenPack.started.add(params ? new ParametrisedListener(value, params).invoke : value);
+        return this;
+    }
 }
 }
 
