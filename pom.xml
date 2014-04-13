@@ -5,13 +5,14 @@
 
     <groupId>by.rovar</groupId>
     <artifactId>stork</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.7.1</version>
     <packaging>swc</packaging>
 
     <name>stork</name>
 
     <build>
         <sourceDirectory>src/main/flex</sourceDirectory>
+        <testSourceDirectory>src/test/flex</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.sonatype.flexmojos</groupId>
@@ -19,8 +20,9 @@
                 <version>4.2-beta</version>
                 <extensions>true</extensions>
                 <configuration>
+					<flashPlayerCommand>/Applications/Flash Player.app/Contents/MacOS/Flash Player</flashPlayerCommand>
+					<swfVersion>15</swfVersion>
                     <debug>true</debug>
-                    <skipTests/>
                     <storepass/>
                 </configuration>
             </plugin>
@@ -46,9 +48,21 @@
             <version>0.9</version>
             <type>swc</type>
         </dependency>
+		<dependency>
+			<groupId>org.flexunit</groupId>
+			<artifactId>flexunit</artifactId>
+			<version>4.1.0.16076</version>
+			<type>swc</type>
+			<scope>test</scope>
+		</dependency>
     </dependencies>
     <repositories>
-
+		<repository>
+			<id>ossrh</id>
+			<name>Sonatype OSS Repository</name>
+			<url>http://oss.sonatype.org/content/groups/public</url>
+			<layout>default</layout>
+		</repository>
         <repository>
             <id>rovar-repository-releases</id>
             <url>https://repository-vaukalak.forge.cloudbees.com/release/</url>
@@ -60,10 +74,6 @@
         <repository>
             <id>flex-mojos-repository</id>
             <url>http://repository.sonatype.org/content/groups/flexgroup/</url>
-        </repository>
-        <repository>
-            <id>sonatype-repository</id>
-            <url>https://oss.sonatype.org/content/groups/public</url>
         </repository>
     </repositories>
 

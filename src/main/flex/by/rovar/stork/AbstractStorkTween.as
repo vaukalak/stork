@@ -87,6 +87,11 @@ public class AbstractStorkTween implements IStorkTween {
         currentProgress = 0;
     }
 
+	public function end() : void {
+		pause();
+		currentProgress = 1;
+	}
+
     public function changeProperty(propertyName:String, changeFunction:Function):void {
     }
 }
